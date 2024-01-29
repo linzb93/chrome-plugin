@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "我的Chrome插件",
+    "description": "自用的Chrome插件",
+    "version": "0.1.0",
+    "icons": {
+        "48": "imgs/logo48x48.png",
+        "128": "imgs/logo128x128.png"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "service_worker": "js/background.js",
+        "type": "module"
+    },
+    "permissions": ["contextMenus", "cookies", "tabs", "storage", "downloads", "unlimitedStorage"]
+}
