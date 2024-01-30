@@ -126,7 +126,7 @@ textarea,
 select,
 optgroup,
 option {
-    -webkit-appearance: none;
+    appearance: none;
     font-family: inherit;
     font-size: inherit;
     font-style: inherit;
@@ -141,7 +141,7 @@ textarea,
 select {
     font-size: 100%;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 input:-webkit-autofill,
@@ -153,7 +153,7 @@ select:-webkit-autofill {
 input[type='text']:focus,
 input[type='password']:focus,
 textarea:focus {
-    -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    box-shadow: 0 0 0 1000px transparent inset;
 }
 
 [v-cloak] {

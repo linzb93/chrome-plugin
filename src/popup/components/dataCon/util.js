@@ -24,30 +24,46 @@ export default {
         });
         setStroage('setting', source);
     },
-    /**
-     * 数据结构：[
-     *  {
-     *      createTime: '',
-     *      list: [
-     *          {
-     *              name: '',
-     *              times: 0,
-     *              forcedTimes: 0,
-     *          }
-     *      ]
-     *  }
-     * ]
-     */
     async getAll() {
         const source = await getStorage('statistics');
-        source.reduce((acc, item) => {
+        return source.reduce((acc, item) => {
             if (!acc.length) {
                 return acc.concat({
                     createTime: item.createTime,
-                    list: [],
+                    list: [
+                        {
+                            webName: item.webName,
+                            times: 1,
+                            forcedTimes: item.forced ? 1 : 0,
+                        },
+                    ],
                 });
             }
-            return [];
+            const last = acc[acc.length - 1];
+            if (item.createTime === last.createTime) {
+                const match = last.list.find((child) => child.webName === item.webName);
+                if (match) {
+                    match.times += 1;
+                    match.forcedTimes += item.forced ? 1 : 0;
+                } else {
+                    last.list.push({
+                        webName: item.webName,
+                        times: 1,
+                    });
+                }
+                return acc;
+            } else {
+                return acc.concat({
+                    createTime: item.createTime,
+                    list: [
+                        {
+                            webName: item.webName,
+                            times: 1,
+                            forcedTimes: item.forced ? 1 : 0,
+                        },
+                    ],
+                });
+            }
         }, []);
     },
 };
