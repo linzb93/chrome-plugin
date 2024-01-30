@@ -11,8 +11,14 @@
         "default_popup": "popup.html"
     },
     "background": {
-        "service_worker": "js/background.js",
+        "service_worker": "background.js",
         "type": "module"
     },
+    "web_accessible_resources": [
+        {
+            "resources": ["chrome-sdk.js"],
+            "matches": ["https://*/*"]
+        }
+    ],
     "permissions": ["contextMenus", "cookies", "tabs", "storage", "downloads", "unlimitedStorage"]
 }

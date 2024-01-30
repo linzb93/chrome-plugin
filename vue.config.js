@@ -1,8 +1,11 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
 
 module.exports = {
+    devServer: {
+        port: 2476,
+    },
     pages: {
         popup:
             process.env.NODE_ENV === 'production'
@@ -43,6 +46,14 @@ module.exports = {
                           {
                               from: `${path.resolve('src')}/common/imgs`,
                               to: `${path.resolve('dist')}/imgs`,
+                          },
+                          {
+                              from: `${path.resolve('src')}/background/index.js`,
+                              to: `${path.resolve('dist')}/background.js`,
+                          },
+                          {
+                              from: `${path.resolve('src')}/background/chrome-sdk.js`,
+                              to: `${path.resolve('dist')}/js/chrome-sdk.js`,
                           },
                       ]),
                   ]

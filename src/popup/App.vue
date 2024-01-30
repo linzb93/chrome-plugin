@@ -10,14 +10,16 @@
                 >{{ tab.title }}</span
             >
         </div>
-        <setting v-if="activeValue === 0" />
-        <data-con v-else-if="activeValue === 1" />
+        <div class="content">
+            <setting v-if="activeValue === 0" />
+            <data-con v-else-if="activeValue === 1" />
+        </div>
     </div>
 </template>
 
 <script>
 import Setting from './components/Setting.vue';
-import DataCon from './components/Data.vue';
+import DataCon from './components/DataCon';
 export default {
     components: {
         Setting,
@@ -47,8 +49,8 @@ export default {
 .box {
     width: 600px;
     height: 300px;
-    padding: 10px;
-    overflow: auto;
+    padding: 10px 0 0 10px;
+
     &.is-dev {
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
@@ -74,5 +76,12 @@ export default {
             }
         }
     }
+}
+.content {
+    max-height: 256px;
+    margin-top: 10px;
+    overflow: auto;
+    padding-right: 10px;
+    padding-bottom: 10px;
 }
 </style>
