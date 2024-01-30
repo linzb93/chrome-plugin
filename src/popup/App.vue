@@ -19,7 +19,7 @@
 
 <script>
 import Setting from './components/Setting.vue';
-import DataCon from './components/DataCon';
+import DataCon from './components/dataCon/Index.vue';
 export default {
     components: {
         Setting,

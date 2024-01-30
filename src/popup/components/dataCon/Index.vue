@@ -10,7 +10,6 @@
 <script>
 export default {
     components: {},
-    props: {},
     data() {
         return {
             list: [],
