@@ -4,6 +4,20 @@ const utils = {
             return data.setting;
         });
     },
+    async log(params) {
+        const { statistics } = await chrome.storage.local.get(['statistics']);
+        statistics.push(params);
+        chrome.storage.local.set('statistics', statistics);
+    },
+    async changeForce(params) {
+        const { statistics } = await chrome.storage.local.get(['statistics']);
+        const match = statistics.find((item) => item.uid === params.uid);
+        if (!match) {
+            return;
+        }
+        match.forced = true;
+        chrome.storage.local.set('statistics', statistics);
+    },
 };
 
 chrome.runtime.onMessage.addListener(async function (request) {

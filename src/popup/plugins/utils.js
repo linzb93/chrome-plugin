@@ -27,10 +27,3 @@ export const setStroage = (obj) => {
         return chrome.storage.local.set(obj);
     }
 };
-
-export const bridge = (obj) => {
-    if (obj.key !== 'my-chrome-plugin') {
-        return;
-    }
-    return new Promise((resolve) => {});
-};

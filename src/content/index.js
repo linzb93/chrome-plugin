@@ -22,8 +22,8 @@ setTimeout(async () => {
     const setting = await bridge({
         method: 'getSetting',
     });
-    if (setting.websites.find((item) => location.origin.startsWith(item.url)) && isInTimeRange(setting.timeList)) {
-        // console.log('匹配屏蔽的网站', dayjs().format('HH:mm:ss'));
+    const match = setting.websites.find((item) => location.origin.startsWith(item.url));
+    if (match && isInTimeRange(setting.timeList)) {
         // 创建一个新的div元素
         var overlay = document.createElement('div');
 
@@ -42,8 +42,24 @@ setTimeout(async () => {
 
         // 将元素插入到body元素中
         document.body.appendChild(overlay);
-        overlay.onclick = function() {
-            document.body.removeChild(overlay)
-        }
+        const uid = new Date().getTime();
+        await bridge({
+            method: 'log',
+            params: {
+                uid,
+                createTime: dayjs().format('YYYY-MM-DD'),
+                webName: match.name,
+            },
+        });
+
+        overlay.onclick = function () {
+            document.body.removeChild(overlay);
+            bridge({
+                method: 'changeForce',
+                params: {
+                    uid,
+                },
+            });
+        };
     }
 }, 1000);

@@ -1,5 +1,4 @@
-import { getStorage, setStroage } from '../../plugins/utils';
-import dayjs from 'dayjs';
+import { getStorage } from '../../plugins/utils';
 
 /**
  * 数据结构
@@ -11,19 +10,6 @@ import dayjs from 'dayjs';
  * }]
  */
 export default {
-    async add(url, forced = false) {
-        const [source, setting] = await Promise.all([getStorage('statistics'), getStorage('setting')]);
-        const match = setting.find((item) => item.url === url);
-        if (!match) {
-            return;
-        }
-        source.push({
-            webName: match.name,
-            createTime: dayjs().format('YYYY-MM-DD'),
-            forced,
-        });
-        setStroage('setting', source);
-    },
     async getAll() {
         const source = await getStorage('statistics');
         return source.reduce((acc, item) => {
