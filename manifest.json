@@ -14,11 +14,20 @@
         "service_worker": "background.js",
         "type": "module"
     },
-    "web_accessible_resources": [
+    "content_scripts": [
         {
-            "resources": ["chrome-sdk.js"],
-            "matches": ["https://*/*"]
+            "matches": ["<all_urls>"],
+            "js": ["js/content.js"]
         }
     ],
-    "permissions": ["contextMenus", "cookies", "tabs", "storage", "downloads", "unlimitedStorage"]
+    "permissions": [
+        "contextMenus",
+        "cookies",
+        "tabs",
+        "storage",
+        "downloads",
+        "unlimitedStorage",
+        "scripting",
+        "activeTab"
+    ]
 }

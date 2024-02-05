@@ -96,7 +96,6 @@ export default {
     methods: {
         async getStorage() {
             const setting = await getStorage('setting');
-            console.log(setting);
             if (setting.websites) {
                 this.form = setting;
             }

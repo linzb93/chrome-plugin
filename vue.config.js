@@ -22,6 +22,12 @@ module.exports = {
     },
     productionSourceMap: false,
     configureWebpack: {
+        entry: {
+            content: './src/content/index.js',
+        },
+        output: {
+            filename: 'js/[name].js',
+        },
         plugins:
             process.env.NODE_ENV === 'production'
                 ? [
@@ -50,10 +56,6 @@ module.exports = {
                           {
                               from: `${path.resolve('src')}/background/index.js`,
                               to: `${path.resolve('dist')}/background.js`,
-                          },
-                          {
-                              from: `${path.resolve('src')}/background/chrome-sdk.js`,
-                              to: `${path.resolve('dist')}/js/chrome-sdk.js`,
                           },
                       ]),
                   ]
