@@ -24,6 +24,7 @@ module.exports = {
     configureWebpack: {
         entry: {
             content: './src/content/index.js',
+            background: './src/background/index.js',
         },
         output: {
             filename: 'js/[name].js',
@@ -52,10 +53,6 @@ module.exports = {
                           {
                               from: `${path.resolve('src')}/common/imgs`,
                               to: `${path.resolve('dist')}/imgs`,
-                          },
-                          {
-                              from: `${path.resolve('src')}/background/index.js`,
-                              to: `${path.resolve('dist')}/background.js`,
                           },
                       ]),
                   ]

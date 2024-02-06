@@ -44,10 +44,22 @@ setTimeout(async () => {
         );
         const div = document.createElement('div');
         overlay.appendChild(div);
-        const p = document.createElement('p');
-        setStyle(p, 'color:#333;margin:0;');
-        p.textContent = '上班期间禁止访问！';
-        div.appendChild(p);
+        const p1 = document.createElement('p');
+        setStyle(p1, 'color:#333;margin:0;');
+        p1.textContent = '上班期间禁止访问！';
+        div.appendChild(p1);
+        const accessTimes = await bridge({
+            method: 'getAccessTimesToday',
+            params: {
+                name: match.name,
+            },
+        });
+        if (accessTimes.times >= 5) {
+            const p2 = document.createElement('p');
+            setStyle(p2, 'text-align:center');
+            p2.textContent = `今天已经打开过${accessTimes.times}次啦！`;
+            overlay.appendChild(p2);
+        }
         const button = document.createElement('div');
         setStyle(
             button,

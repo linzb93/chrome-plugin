@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const utils = {
     getSetting() {
         return chrome.storage.local.get(['setting']).then((data) => {
@@ -11,13 +13,27 @@ const utils = {
         chrome.storage.local.set({ statistics });
     },
     async changeForce(params) {
-        const { statistics } = await chrome.storage.local.get(['statistics']);
+        const data = await chrome.storage.local.get(['statistics']);
+        const statistics = data.statistics || [];
         const match = statistics.find((item) => item.uid === params.uid);
         if (!match) {
             return;
         }
         match.forced = true;
         chrome.storage.local.set({ statistics });
+    },
+    async getAccessTimesToday(params) {
+        const data = await chrome.storage.local.get(['statistics']);
+        const statistics = data.statistics || [];
+        if (!statistics.length) {
+            return {
+                times: 0,
+            };
+        }
+        return {
+            times: statistics.filter((item) => dayjs().isSame(item.createTime, 'd') && item.webName === params.name)
+                .length,
+        };
     },
 };
 
