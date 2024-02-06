@@ -4,9 +4,9 @@
             <el-table-column label="日期" prop="createTime"></el-table-column>
             <el-table-column label="查看次数">
                 <template #default="scope">
-                    <div v-for="item in scope.list" :key="item.webName">
+                    <span v-for="item in scope.row.list" :key="item.webName">
                         {{ item.webName }}:{{ item.times }}次&nbsp;
-                    </div>
+                    </span>
                 </template>
             </el-table-column>
         </el-table>

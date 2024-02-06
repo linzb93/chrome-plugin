@@ -3,7 +3,7 @@
         <el-form-item label="网站">
             <ul class="websites">
                 <li v-for="(web, index) in form.websites" :key="web.url">
-                    {{ web.name }}({{ web.url }}) <i class="el-icon-remove ml10" @click="remove('website', index)"></i>
+                    {{ web.name }}({{ web.url }}) <i class="el-icon-remove ml10" @click="remove('websites', index)"></i>
                 </li>
             </ul>
             <el-link type="primary" v-if="!isAdded.website" @click="isAdded.website = true">+ 添加网站</el-link>
@@ -96,7 +96,7 @@ export default {
     methods: {
         async getStorage() {
             const setting = await getStorage('setting');
-            if (setting.websites) {
+            if (setting && setting.websites) {
                 this.form = setting;
             }
         },

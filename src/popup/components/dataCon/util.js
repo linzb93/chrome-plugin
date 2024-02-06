@@ -35,6 +35,7 @@ export default {
                     last.list.push({
                         webName: item.webName,
                         times: 1,
+                        forcedTimes: 0,
                     });
                 }
                 return acc;

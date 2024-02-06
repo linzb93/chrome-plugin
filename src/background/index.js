@@ -5,9 +5,10 @@ const utils = {
         });
     },
     async log(params) {
-        const { statistics } = await chrome.storage.local.get(['statistics']);
+        const data = await chrome.storage.local.get(['statistics']);
+        const statistics = data.statistics || [];
         statistics.push(params);
-        chrome.storage.local.set('statistics', statistics);
+        chrome.storage.local.set({ statistics });
     },
     async changeForce(params) {
         const { statistics } = await chrome.storage.local.get(['statistics']);
@@ -16,7 +17,7 @@ const utils = {
             return;
         }
         match.forced = true;
-        chrome.storage.local.set('statistics', statistics);
+        chrome.storage.local.set({ statistics });
     },
 };
 
