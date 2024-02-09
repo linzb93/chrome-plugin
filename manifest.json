@@ -25,9 +25,9 @@
         "cookies",
         "tabs",
         "storage",
-        "downloads",
         "unlimitedStorage",
         "scripting",
-        "activeTab"
+        "activeTab",
+        "webNavigation"
     ]
 }

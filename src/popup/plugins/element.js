@@ -5,6 +5,8 @@ import {
     TimeSelect,
     Icon,
     Message,
+    Radio,
+    RadioGroup,
     MessageBox,
     Form,
     FormItem,
@@ -19,6 +21,8 @@ Vue.use(TimeSelect);
 Vue.use(Icon);
 Vue.use(Form);
 Vue.use(FormItem);
+Vue.use(Radio);
+Vue.use(RadioGroup);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Link);

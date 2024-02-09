@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 function bridge(obj) {
     chrome.runtime.sendMessage({
         key: 'my-chrome-plugin',
@@ -9,16 +8,7 @@ function bridge(obj) {
         chrome.runtime.onMessage.addListener(resolve);
     });
 }
-// 判断是否当前时间是否在时间范围列表内
-function isInTimeRange(timeList) {
-    return timeList.some((timeRange) => {
-        const [start, end] = timeRange.split('~');
-        return (
-            dayjs().isAfter(`${dayjs().format('YYYY-MM-DD')} ${start}:00`) &&
-            dayjs().isBefore(`${dayjs().format('YYYY-MM-DD')} ${end}:00`)
-        );
-    });
-}
+
 // 设置dom样式
 function setStyle(el, styles) {
     const styleList = styles.split(';');
@@ -30,63 +20,49 @@ function setStyle(el, styles) {
     }
 }
 
-setTimeout(async () => {
-    const setting = await bridge({
-        method: 'getSetting',
-    });
-    const match = setting.websites.find((item) => location.origin.startsWith(item.url));
-    if (match && isInTimeRange(setting.timeList)) {
-        const uid = new Date().getTime();
-        const overlay = document.createElement('div');
-        setStyle(
-            overlay,
-            'z-index:20000;position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(255,255,255,0.5);font-size:80px;display:flex;justify-content:center;align-items:center'
-        );
-        const div = document.createElement('div');
-        overlay.appendChild(div);
-        const p1 = document.createElement('p');
-        setStyle(p1, 'color:#333;margin:0;');
-        p1.textContent = '上班期间禁止访问！';
-        div.appendChild(p1);
-        const accessTimes = await bridge({
-            method: 'getAccessTimesToday',
-            params: {
-                name: match.name,
-            },
-        });
-        if (accessTimes.times >= 5) {
-            const p2 = document.createElement('p');
-            setStyle(p2, 'text-align:center');
-            p2.textContent = `今天已经打开过${accessTimes.times}次啦！`;
-            overlay.appendChild(p2);
-        }
-        const button = document.createElement('div');
-        setStyle(
-            button,
-            'cursor:pointer;width:300px;height:80px;line-height:80px;border-radius:40px;text-align:center;font-size:30px;color:#409EFF;border:1px solid #409EFF;margin:30px auto'
-        );
-        button.textContent = '我真的要看';
-        button.onclick = function () {
-            document.body.removeChild(overlay);
-            document.body.style.overflow = 'auto';
-            bridge({
-                method: 'changeForce',
-                params: {
-                    uid,
-                },
-            });
-        };
-        div.appendChild(button);
-        document.body.appendChild(overlay);
-        document.body.style.overflow = 'hidden';
-
-        await bridge({
-            method: 'log',
-            params: {
-                uid,
-                createTime: dayjs().format('YYYY-MM-DD'),
-                webName: match.name,
-            },
-        });
+chrome.runtime.onMessage.addListener(async (obj) => {
+    if (obj.key !== 'my-chrome-plugin-background') {
+        return;
     }
-}, 1000);
+    const overlay = document.createElement('div');
+    setStyle(
+        overlay,
+        'z-index:20000;position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(255,255,255,0.5);font-size:80px;display:flex;justify-content:center;align-items:center'
+    );
+    const div = document.createElement('div');
+    div.style.textAlign = 'center';
+    overlay.appendChild(div);
+    const p1 = document.createElement('p');
+    setStyle(p1, 'color:#333;margin:0;');
+    p1.textContent = '上班期间禁止访问！';
+    div.appendChild(p1);
+    const accessTimes = await bridge({
+        method: 'getAccessTimesToday',
+        params: {
+            name: obj.params.name,
+        },
+    });
+    if (accessTimes.times >= 5) {
+        const p2 = document.createElement('p');
+        setStyle(p2, 'font-size: 66px;color:#f00;margin-top:10px;');
+        p2.textContent = `今天已经打开过${accessTimes.times}次啦！`;
+        div.appendChild(p2);
+    }
+    const button = document.createElement('div');
+    setStyle(
+        button,
+        'cursor:pointer;width:300px;height:80px;line-height:80px;border-radius:40px;text-align:center;font-size:30px;color:#409EFF;border:1px solid #409EFF;margin:30px auto'
+    );
+    button.textContent = '我真的要看';
+    button.onclick = function () {
+        document.body.removeChild(overlay);
+        document.body.style.overflow = 'auto';
+        bridge({
+            method: 'changeForce',
+            params: {},
+        });
+    };
+    div.appendChild(button);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+});

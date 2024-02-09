@@ -54,6 +54,10 @@ module.exports = {
                               from: `${path.resolve('src')}/common/imgs`,
                               to: `${path.resolve('dist')}/imgs`,
                           },
+                          {
+                              from: `${path.resolve('src')}/background/forbid.html`,
+                              to: `${path.resolve('dist')}/template/forbid.html`,
+                          },
                       ]),
                   ]
                 : [],

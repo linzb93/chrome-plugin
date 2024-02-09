@@ -60,6 +60,12 @@
                 <el-button class="ml10" size="small" @click="isAdded.time = false">取消</el-button>
             </div>
         </el-form-item>
+        <el-form-item label="提醒方式">
+            <el-radio-group v-model="form.remindType">
+                <el-radio :label="0">弹出层</el-radio>
+                <el-radio :label="1">重定向至新窗口</el-radio>
+            </el-radio-group>
+        </el-form-item>
         <el-form-item>
             <el-button type="primary" size="small" @click="save">提交</el-button>
         </el-form-item>
@@ -81,6 +87,7 @@ export default {
             form: {
                 timeList: [],
                 websites: [],
+                remindType: 0,
             },
             tempForm: {
                 url: '',

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-
+import debounce from 'throttle-debounce/debounce';
 const utils = {
     getSetting() {
         return chrome.storage.local.get(['setting']).then((data) => {
@@ -45,3 +45,40 @@ chrome.runtime.onMessage.addListener(async function (request) {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     chrome.tabs.sendMessage(tabs[0].id, output);
 });
+// 判断是否当前时间是否在时间范围列表内
+function isInTimeRange(timeList) {
+    return timeList.some((timeRange) => {
+        const [start, end] = timeRange.split('~');
+        return (
+            dayjs().isAfter(`${dayjs().format('YYYY-MM-DD')} ${start}:00`) &&
+            dayjs().isBefore(`${dayjs().format('YYYY-MM-DD')} ${end}:00`)
+        );
+    });
+}
+(() => {
+    chrome.webNavigation.onCompleted.addListener(
+        debounce(800, async (details) => {
+            const setting = await utils.getSetting();
+            const { url } = details;
+            const match = setting.websites.find((item) => url.startsWith(item.url));
+            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (match && isInTimeRange(setting.timeList)) {
+                utils.log({
+                    name: match.name,
+                    createTime: dayjs().format('YYYY-MM-DD'),
+                });
+                if (setting.remindType === 1) {
+                    const redirectUrl = chrome.runtime.getURL('template/forbid.html');
+                    chrome.tabs.update(tabs[0].id, { url: redirectUrl });
+                } else {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        key: 'my-chrome-plugin-background',
+                        params: {
+                            name: match.name,
+                        },
+                    });
+                }
+            }
+        })
+    );
+})();
