@@ -1,13 +1,37 @@
 function bridge(obj) {
     chrome.runtime.sendMessage({
-        key: 'my-chrome-plugin',
+        key: 'lcp-content-background',
         method: obj.method,
         params: obj.params,
     });
     return new Promise((resolve) => {
-        chrome.runtime.onMessage.addListener(resolve);
+        chrome.runtime.onMessage.addListener((data) => {
+            if (data.key === 'lcp-background-content') {
+                resolve({
+                    params: data.params,
+                });
+            }
+        });
     });
 }
+
+// 处理从web接收的信息
+window.addEventListener('message', async (ev) => {
+    const sendData = ev.data;
+    if (sendData.key === 'lcp-web-content') {
+        const replyObj = await bridge({
+            method: sendData.method,
+            params: sendData.params,
+        });
+        window.postMessage(
+            {
+                key: 'lcp-content-web',
+                params: replyObj.params,
+            },
+            '*'
+        );
+    }
+});
 
 // 设置dom样式
 function setStyle(el, styles) {

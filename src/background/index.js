@@ -1,15 +1,25 @@
 import dayjs from 'dayjs';
 import debounce from 'throttle-debounce/debounce';
 const utils = {
-    getSetting() {
-        return chrome.storage.local.get(['setting']).then((data) => {
-            return data.setting;
+    getStorage(key) {
+        return chrome.storage.local.get(key.split(',')).then((data) => {
+            if (key.includes(',')) {
+                return data;
+            }
+            return data[key];
         });
+    },
+    setStorage(obj) {
+        return chrome.storage.local.set(obj);
+    },
+    getAllStorage() {
+        const key = 'setting,statistics';
+        return this.getStorage(key);
     },
     async log(params) {
         const data = await chrome.storage.local.get(['statistics']);
         const statistics = data.statistics || [];
-        statistics.push(params);
+        statistics.unshift(params);
         chrome.storage.local.set({ statistics });
     },
     async changeForce(params) {
@@ -38,12 +48,15 @@ const utils = {
 };
 
 chrome.runtime.onMessage.addListener(async function (request) {
-    if (request.key !== 'my-chrome-plugin' || !utils[request.method]) {
+    if (request.key !== 'lcp-content-background' || !utils[request.method]) {
         return;
     }
     const output = await utils[request.method](request.params);
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    chrome.tabs.sendMessage(tabs[0].id, output);
+    chrome.tabs.sendMessage(tabs[0].id, {
+        key: 'lcp-background-content',
+        params: output,
+    });
 });
 // 判断是否当前时间是否在时间范围列表内
 function isInTimeRange(timeList) {
@@ -55,16 +68,16 @@ function isInTimeRange(timeList) {
         );
     });
 }
-(() => {
+(async () => {
     chrome.webNavigation.onCompleted.addListener(
         debounce(800, async (details) => {
-            const setting = await utils.getSetting();
+            const setting = await utils.getStorage('setting');
             const { url } = details;
             const match = setting.websites.find((item) => url.startsWith(item.url));
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
             if (match && isInTimeRange(setting.timeList)) {
                 utils.log({
-                    name: match.name,
+                    webName: match.name,
                     createTime: dayjs().format('YYYY-MM-DD'),
                 });
                 if (setting.remindType === 1) {
@@ -81,4 +94,9 @@ function isInTimeRange(timeList) {
             }
         })
     );
+
+    // 清理7天前的log
+    const statistics = await utils.getStorage('statistics');
+    const filterStats = statistics.filter((item) => !dayjs().subtract(7, 'd').isAfter(item.createTime));
+    utils.setStorage('statistics', filterStats);
 })();

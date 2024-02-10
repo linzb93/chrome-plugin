@@ -113,13 +113,6 @@ i {
     zoom: 1;
 }
 
-.dz-nowrap {
-    max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
 input,
 button,
 textarea,
@@ -172,6 +165,9 @@ textarea:focus {
 }
 .ml10 {
     margin-left: 10px !important;
+}
+.mb10 {
+    margin-bottom: 10px !important;
 }
 .mt20 {
     margin-top: 20px !important;

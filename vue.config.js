@@ -1,7 +1,5 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
-
+const { entry, copyPluginConfig } = require('./build/commonCopy');
 module.exports = {
     devServer: {
         port: 2476,
@@ -22,10 +20,7 @@ module.exports = {
     },
     productionSourceMap: false,
     configureWebpack: {
-        entry: {
-            content: './src/content/index.js',
-            background: './src/background/index.js',
-        },
+        entry,
         output: {
             filename: 'js/[name].js',
         },
@@ -41,24 +36,7 @@ module.exports = {
                               },
                           ],
                       }),
-                      new CopyWebpackPlugin([
-                          {
-                              from: `${path.resolve('src')}/common/js/vue.min.js`,
-                              to: `${path.resolve('dist')}/js/vue.min.js`,
-                          },
-                          {
-                              from: path.resolve('manifest.json'),
-                              to: `${path.resolve('dist')}/manifest.json`,
-                          },
-                          {
-                              from: `${path.resolve('src')}/common/imgs`,
-                              to: `${path.resolve('dist')}/imgs`,
-                          },
-                          {
-                              from: `${path.resolve('src')}/background/forbid.html`,
-                              to: `${path.resolve('dist')}/template/forbid.html`,
-                          },
-                      ]),
+                      copyPluginConfig,
                   ]
                 : [],
     },

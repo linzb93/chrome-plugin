@@ -98,7 +98,9 @@ export default {
         };
     },
     created() {
-        this.getStorage();
+        setTimeout(() => {
+            this.getStorage();
+        }, 2000);
     },
     methods: {
         async getStorage() {
@@ -164,7 +166,13 @@ export default {
             await setStroage({
                 setting: this.form,
             });
-            this.$message.success('保存成功');
+            this.$message({
+                type: 'success',
+                message: '保存成功',
+                onClose: () => {
+                    window.close();
+                },
+            });
         },
     },
 };

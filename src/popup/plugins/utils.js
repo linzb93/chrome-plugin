@@ -1,14 +1,11 @@
+import bridge from './bridge';
 const isDev = process.env.NODE_ENV === 'development';
 
 export const getStorage = (key) => {
     if (isDev) {
-        return new Promise((resolve) => {
-            const dataStr = localStorage.getItem(key);
-            try {
-                resolve(JSON.parse(dataStr));
-            } catch (error) {
-                resolve(dataStr);
-            }
+        return bridge({
+            method: 'getStorage',
+            params: key,
         });
     } else {
         return chrome.storage.local.get([key]).then((data) => {
@@ -19,10 +16,10 @@ export const getStorage = (key) => {
 
 export const setStroage = (obj) => {
     if (isDev) {
-        const key = Object.keys(obj)[0];
-        const value = Object.values(obj)[0];
-        localStorage.setItem(key, JSON.stringify(value));
-        return Promise.resolve();
+        return bridge({
+            method: 'setStorage',
+            params: obj,
+        });
     } else {
         return chrome.storage.local.set(obj);
     }

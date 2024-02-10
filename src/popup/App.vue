@@ -1,25 +1,29 @@
 <template>
-    <div class="box" :class="{ 'is-dev': isDev }">
-        <div class="tabs">
-            <span
-                class="tab"
-                v-for="tab in tabs"
-                :key="tab.id"
-                :class="{ on: tab.id === activeValue }"
-                @click="changeTab(tab)"
-                >{{ tab.title }}</span
-            >
-        </div>
-        <div class="content">
-            <setting v-if="activeValue === 0" />
-            <data-con v-else-if="activeValue === 1" />
+    <div>
+        <el-button type="primary" v-if="isDev" @click="logQuery" class="mb10">打开数据库</el-button>
+        <div class="box" :class="{ 'is-dev': isDev }">
+            <div class="tabs">
+                <span
+                    class="tab"
+                    v-for="tab in tabs"
+                    :key="tab.id"
+                    :class="{ on: tab.id === activeValue }"
+                    @click="changeTab(tab)"
+                    >{{ tab.title }}</span
+                >
+            </div>
+            <div class="content">
+                <setting v-if="activeValue === 0" />
+                <data-con v-else-if="activeValue === 1" />
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import Setting from './components/Setting.vue';
-import DataCon from './components/dataCon/Index.vue';
+import Setting from './components/Setting';
+import DataCon from './components/dataCon/Index';
+import bridge from './plugins/bridge';
 export default {
     components: {
         Setting,
@@ -41,6 +45,14 @@ export default {
                 return;
             }
             this.activeValue = tab.id;
+        },
+        async logQuery() {
+            const data = await bridge({
+                method: 'getAllStorage',
+            });
+            for (const key in data) {
+                console.log(key, data[key]);
+            }
         },
     },
 };

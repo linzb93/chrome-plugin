@@ -13,6 +13,7 @@ import {
     Table,
     TableColumn,
     Link,
+    Drawer,
 } from 'element-ui';
 
 Vue.use(Button);
@@ -26,5 +27,6 @@ Vue.use(RadioGroup);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Link);
+Vue.use(Drawer);
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;
