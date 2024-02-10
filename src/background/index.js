@@ -47,17 +47,22 @@ const utils = {
     },
 };
 
-chrome.runtime.onMessage.addListener(async function (request) {
-    if (request.key !== 'lcp-content-background' || !utils[request.method]) {
-        return;
+chrome.runtime.onConnect.addListener((port) => {
+    if (port.name === 'background') {
+        port.onMessage.addListener(async (request) => {
+            if (!utils[request.method]) {
+                return;
+            }
+            const output = await utils[request.method](request.params);
+            port.postMessage({
+                method: request.method,
+                params: output,
+                requestId: request.requestId,
+            });
+        });
     }
-    const output = await utils[request.method](request.params);
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    chrome.tabs.sendMessage(tabs[0].id, {
-        key: 'lcp-background-content',
-        params: output,
-    });
 });
+
 // 判断是否当前时间是否在时间范围列表内
 function isInTimeRange(timeList) {
     return timeList.some((timeRange) => {
