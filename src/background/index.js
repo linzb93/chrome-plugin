@@ -10,6 +10,9 @@ const utils = {
         });
     },
     setStorage(obj) {
+        if (typeof obj === 'string') {
+            return;
+        }
         return chrome.storage.local.set(obj);
     },
     getAllStorage() {
@@ -74,6 +77,15 @@ function isInTimeRange(timeList) {
     });
 }
 (async () => {
+    // test 测试chrome.cookies
+    chrome.cookies.getAll(
+        {
+            url: 'https://developer.chrome.com',
+        },
+        (data) => {
+            console.log(data);
+        }
+    );
     chrome.webNavigation.onCompleted.addListener(
         debounce(800, async (details) => {
             const setting = await utils.getStorage('setting');

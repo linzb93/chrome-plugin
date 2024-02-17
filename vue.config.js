@@ -5,18 +5,11 @@ module.exports = {
         port: 2476,
     },
     pages: {
-        popup:
-            process.env.NODE_ENV === 'production'
-                ? {
-                      entry: 'src/popup/index.js',
-                      template: 'public/index.html',
-                      filename: 'popup.html',
-                  }
-                : {
-                      entry: 'src/popup/index.js',
-                      template: 'public/index.html',
-                      filename: 'index.html',
-                  },
+        popup: {
+            entry: 'src/popup/index.js',
+            template: 'public/index.html',
+            filename: process.env.NODE_ENV === 'production' ? 'popup.html' : 'index.html',
+        },
     },
     productionSourceMap: false,
     configureWebpack: {
