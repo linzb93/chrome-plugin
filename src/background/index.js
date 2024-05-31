@@ -80,9 +80,10 @@ function isInTimeRange(timeList) {
     // test 测试chrome.cookies
     chrome.cookies.getAll(
         {
-            url: 'https://developer.chrome.com',
+            url: 'https://juejin.cn',
         },
         (data) => {
+            console.log('读取所有cookie');
             console.log(data);
         }
     );

@@ -93,21 +93,21 @@ chrome.runtime.onMessage.addListener(async (obj) => {
         p2.textContent = `今天已经打开过${accessTimes.times}次啦！`;
         div.appendChild(p2);
     }
-    const button = document.createElement('div');
-    setStyle(
-        button,
-        'cursor:pointer;width:300px;height:80px;line-height:80px;border-radius:40px;text-align:center;font-size:30px;color:#409EFF;border:1px solid #409EFF;margin:30px auto'
-    );
-    button.textContent = '我真的要看';
-    button.onclick = function () {
-        document.body.removeChild(overlay);
-        document.body.style.overflow = 'auto';
-        bridge({
-            method: 'changeForce',
-            params: {},
-        });
-    };
-    div.appendChild(button);
+    // const button = document.createElement('div');
+    // setStyle(
+    //     button,
+    //     'cursor:pointer;width:300px;height:80px;line-height:80px;border-radius:40px;text-align:center;font-size:30px;color:#409EFF;border:1px solid #409EFF;margin:30px auto'
+    // );
+    // button.textContent = '我真的要看';
+    // button.onclick = function () {
+    //     document.body.removeChild(overlay);
+    //     document.body.style.overflow = 'auto';
+    //     bridge({
+    //         method: 'changeForce',
+    //         params: {},
+    //     });
+    // };
+    // div.appendChild(button);
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
 });
